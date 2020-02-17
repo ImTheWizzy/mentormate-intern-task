@@ -1,9 +1,18 @@
 package main;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class DrawLogo {
+	
+	class DrawLetterM {
+		int letterThicknessMin;
+		int letterThicknessMax;
+		int letterThickness;
+		int chunkSize;
+		
+		char emptySpaceChar;
+		char fillSpaceChar;
+	}
 
 	public static boolean isOdd(int numberToCheck) {
 		if(numberToCheck % 2 != 0) {
@@ -23,59 +32,61 @@ public class DrawLogo {
 		String [][] asciiGrid = new String[letterThickness + 1][letterThickness * 5];
 		
 		int counter = letterThickness;
+		int counter2 = 0;
 		
 		boolean counterReachedZero = false;
 		
 		boolean midPointReached = false;
 		
 		for(int columnCount = 0; columnCount < letterThickness * 5; columnCount++) { //FOR EACH CHUNK OF N SIZED CHARACTERS
-			for(int rowCount = 0; rowCount < letterThickness + 1; rowCount++) { //FOR VERTICAL LINES
-//				if(!counterReachedZero && counter >= (letterThickness + 1) / 2) {
-//					if(rowCount < letterThickness - counter) {
-//						asciiGrid[rowCount][columnCount] = "*";
-//					} else {
-//						asciiGrid[rowCount][columnCount] = "-";
-//					}
-//					counter--;
-//				}
-//				else
-				if(midPointReached) {
-					if(rowCount <= counter) {
-						asciiGrid[rowCount][columnCount] = "*";
+			for(int rowCountUp = 0, rowCountDown = letterThickness; rowCountUp < letterThickness + 1; rowCountUp++, rowCountDown--) { //FOR VERTICAL LINES
+				if(counterReachedZero || columnCount + letterThickness >= letterThickness * 5) {
+					if(rowCountUp < counter) {
+						asciiGrid[rowCountDown][columnCount] = "*";
 					} else {
-						asciiGrid[rowCount][columnCount] = "-";
+						asciiGrid[rowCountDown][columnCount] = "-";
 					}
-				} else if(counterReachedZero) {
-					if(rowCount < letterThickness - counter) {
-						asciiGrid[rowCount][columnCount] = "*";
+				} else if(midPointReached) {
+					if(rowCountUp >= counter2) {
+						asciiGrid[rowCountDown][columnCount] = "*";
 					} else {
-						asciiGrid[rowCount][columnCount] = "-";
+						asciiGrid[rowCountDown][columnCount] = "-";
+					}
+				} else if(counter > 0) {
+					if(rowCountUp >= counter) {
+						asciiGrid[rowCountUp][columnCount] = "*";
+					} else {
+						asciiGrid[rowCountUp][columnCount] = "-";
 					}
 				} else {
-					if(rowCount >= counter) {
-						asciiGrid[rowCount][columnCount] = "*";
+					if(rowCountUp > counter2) {
+						asciiGrid[rowCountDown][columnCount] = "*";
 					} else {
-						asciiGrid[rowCount][columnCount] = "-";
-					}	
+						asciiGrid[rowCountDown][columnCount] = "-";
+					}
 				}
 			}
 			
-			if(counter > 0 && !counterReachedZero) {
+			if(counter > 0) {
 				counter--;
-				if(counter <= 0) {
+				if(counter == (letterThickness + 1) / 2) {
+					counterReachedZero = false;
+				}
+				if(counter == 0) {
+					counter2 = 0;
+				}
+			} else if(midPointReached) {
+				counter2--;
+				if(counter2 == 0) {
+					counter = letterThickness;
+					midPointReached = false;
 					counterReachedZero = true;
 				}
 			} else {
-				counter++;
-//				if(counter >= (letterThickness + 1) / 2) {
-//					counterReachedZero = false;
-//				}
-				if(counter >= (letterThickness + 1) / 2) {
+				if(counter2 + 1 == (letterThickness + 1) / 2) {
 					midPointReached = true;
-				}
-				if(counter >= letterThickness) {
-					counterReachedZero = false;
-					midPointReached = false;
+				} else {
+					counter2++;
 				}
 			}
 		}
@@ -84,6 +95,11 @@ public class DrawLogo {
 			for(String column : rows) {
 				System.out.print(column);
 			}
+			
+			for(String column : rows) {
+				System.out.print(column);
+			}
+			
 			System.out.print('\n');
 		}
 	}
