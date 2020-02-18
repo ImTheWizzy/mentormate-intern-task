@@ -43,38 +43,37 @@ public class DrawLogo {
 		return false;
 	}
 	
-	void printAsciiLogo() {
+	public void printAsciiLogo() {
 		char [][] asciiGrid = new char[letterThickness + 1][letterThickness * chunkSize];
 		
-		int counter = letterThickness;
-		int counter2 = 0;
+		int counterUp = 0;
+		int counterDown = letterThickness;
 		
-		boolean counterReachedZero = false;
+		boolean reachedZeroFlag = false;
+		boolean reachedMidpointFlag = false;
 		
-		boolean midPointReached = false;
-		
-		for(int columnCount = 0; columnCount < letterThickness * chunkSize; columnCount++) { //FOR EACH CHUNK OF N SIZED CHARACTERS
-			for(int rowCountUp = 0, rowCountDown = letterThickness; rowCountUp < letterThickness + 1; rowCountUp++, rowCountDown--) { //FOR VERTICAL LINES
-				if(counterReachedZero || columnCount + letterThickness >= letterThickness * chunkSize) {
-					if(rowCountUp < counter) {
+		for(int columnCount = 0; columnCount < letterThickness * chunkSize; columnCount++) {
+			for(int rowCountUp = 0, rowCountDown = letterThickness; rowCountUp < letterThickness + 1; rowCountUp++, rowCountDown--) {
+				if(reachedZeroFlag || columnCount + letterThickness >= letterThickness * chunkSize) {
+					if(rowCountUp < counterDown) {
 						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
 						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
 					}
-				} else if(midPointReached) {
-					if(rowCountUp >= counter2) {
+				} else if(reachedMidpointFlag) {
+					if(rowCountUp >= counterUp) {
 						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
 						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
 					}
-				} else if(counter > 0) {
-					if(rowCountUp >= counter) {
+				} else if(counterDown > 0) {
+					if(rowCountUp >= counterDown) {
 						asciiGrid[rowCountUp][columnCount] = fillSpaceChar;
 					} else {
 						asciiGrid[rowCountUp][columnCount] = emptySpaceChar;
 					}
 				} else {
-					if(rowCountUp > counter2) {
+					if(rowCountUp > counterUp) {
 						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
 						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
@@ -82,26 +81,26 @@ public class DrawLogo {
 				}
 			}
 			
-			if(counter > 0) {
-				counter--;
-				if(counter == (letterThickness + 1) / 2) {
-					counterReachedZero = false;
+			if(counterDown > 0) {
+				counterDown--;
+				if(counterDown == (letterThickness + 1) / 2) {
+					reachedZeroFlag = false;
 				}
-				if(counter == 0) {
-					counter2 = 0;
+				if(counterDown == 0) {
+					counterUp = 0;
 				}
-			} else if(midPointReached) {
-				counter2--;
-				if(counter2 == 0) {
-					counter = letterThickness;
-					midPointReached = false;
-					counterReachedZero = true;
+			} else if(reachedMidpointFlag) {
+				counterUp--;
+				if(counterUp == 0) {
+					counterDown = letterThickness;
+					reachedMidpointFlag = false;
+					reachedZeroFlag = true;
 				}
 			} else {
-				if(counter2 + 1 == (letterThickness + 1) / 2) {
-					midPointReached = true;
+				if(counterUp + 1 == (letterThickness + 1) / 2) {
+					reachedMidpointFlag = true;
 				} else {
-					counter2++;
+					counterUp++;
 				}
 			}
 		}
@@ -116,7 +115,7 @@ public class DrawLogo {
 			}
 			
 			System.out.print('\n');
-		}
+		}	
 	}
 
 
