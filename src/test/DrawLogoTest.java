@@ -19,11 +19,16 @@ class DrawLogoTest {
 
 	@Test
 	void testIsValidLetterThickness() {
-		assertEquals(true, DrawLogo.isValidLetterThickness(3));
-		assertEquals(false, DrawLogo.isValidLetterThickness(4));
-		assertEquals(true, DrawLogo.isValidLetterThickness(9999));
-		assertEquals(false, DrawLogo.isValidLetterThickness(10000));
-		assertEquals(false, DrawLogo.isValidLetterThickness(10001));
+		DrawLogo testObject1 = new DrawLogo(2, 10000, 3, '-', '*');
+		assertEquals(true, testObject1.isValidLetterThickness());
+		DrawLogo testObject2 = new DrawLogo(2, 10000, 4, '-', '*');
+		assertEquals(false, testObject2.isValidLetterThickness());
+		DrawLogo testObject3 = new DrawLogo(2, 10000, 9999, '-', '*');
+		assertEquals(true, testObject3.isValidLetterThickness());
+		DrawLogo testObject4 = new DrawLogo(2, 10000, 10000, '-', '*');
+		assertEquals(false, testObject4.isValidLetterThickness());
+		DrawLogo testObject5 = new DrawLogo(2, 10000, 10001, '-', '*');
+		assertEquals(false, testObject5.isValidLetterThickness());
 	}
 
 }

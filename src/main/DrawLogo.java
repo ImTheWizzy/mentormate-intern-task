@@ -3,17 +3,32 @@ package main;
 import java.util.Scanner;
 
 public class DrawLogo {
+	int letterThicknessMin;
+	int letterThicknessMax;
+	int letterThickness;
+	int chunkSize = 5;
 	
-	class DrawLetterM {
-		int letterThicknessMin;
-		int letterThicknessMax;
-		int letterThickness;
-		int chunkSize;
+	char emptySpaceChar;
+	char fillSpaceChar;
+	
+	public DrawLogo() {
+		letterThicknessMin = 2;
+		letterThicknessMax = 10000;
+		letterThickness = 3;
 		
-		char emptySpaceChar;
-		char fillSpaceChar;
+		emptySpaceChar = '-';
+		fillSpaceChar = '*';
 	}
-
+	
+	public DrawLogo(int letterThicknessMin, int letterThicknessMax, int letterThickness, char emptySpaceChar, char fillSpaceChar) {
+		this.letterThicknessMin = letterThicknessMin;
+		this.letterThicknessMax = letterThicknessMax;
+		this.letterThickness = letterThickness;
+		
+		this.emptySpaceChar = emptySpaceChar;
+		this.fillSpaceChar = fillSpaceChar;
+	}
+	
 	public static boolean isOdd(int numberToCheck) {
 		if(numberToCheck % 2 != 0) {
 			return true;
@@ -21,15 +36,15 @@ public class DrawLogo {
 		return false;
 	}
 	
-	public static boolean isValidLetterThickness(int letterThickness) {
-		if((letterThickness > 2 && letterThickness < 10000) && isOdd(letterThickness)) {
+	public boolean isValidLetterThickness() {
+		if((letterThickness > letterThicknessMin && letterThickness < letterThicknessMax) && isOdd(letterThickness)) {
 			return true;
 		}
 		return false;
 	}
 	
-	static void printAsciiLogo(int letterThickness) {
-		String [][] asciiGrid = new String[letterThickness + 1][letterThickness * 5];
+	void printAsciiLogo() {
+		char [][] asciiGrid = new char[letterThickness + 1][letterThickness * chunkSize];
 		
 		int counter = letterThickness;
 		int counter2 = 0;
@@ -38,31 +53,31 @@ public class DrawLogo {
 		
 		boolean midPointReached = false;
 		
-		for(int columnCount = 0; columnCount < letterThickness * 5; columnCount++) { //FOR EACH CHUNK OF N SIZED CHARACTERS
+		for(int columnCount = 0; columnCount < letterThickness * chunkSize; columnCount++) { //FOR EACH CHUNK OF N SIZED CHARACTERS
 			for(int rowCountUp = 0, rowCountDown = letterThickness; rowCountUp < letterThickness + 1; rowCountUp++, rowCountDown--) { //FOR VERTICAL LINES
-				if(counterReachedZero || columnCount + letterThickness >= letterThickness * 5) {
+				if(counterReachedZero || columnCount + letterThickness >= letterThickness * chunkSize) {
 					if(rowCountUp < counter) {
-						asciiGrid[rowCountDown][columnCount] = "*";
+						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
-						asciiGrid[rowCountDown][columnCount] = "-";
+						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
 					}
 				} else if(midPointReached) {
 					if(rowCountUp >= counter2) {
-						asciiGrid[rowCountDown][columnCount] = "*";
+						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
-						asciiGrid[rowCountDown][columnCount] = "-";
+						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
 					}
 				} else if(counter > 0) {
 					if(rowCountUp >= counter) {
-						asciiGrid[rowCountUp][columnCount] = "*";
+						asciiGrid[rowCountUp][columnCount] = fillSpaceChar;
 					} else {
-						asciiGrid[rowCountUp][columnCount] = "-";
+						asciiGrid[rowCountUp][columnCount] = emptySpaceChar;
 					}
 				} else {
 					if(rowCountUp > counter2) {
-						asciiGrid[rowCountDown][columnCount] = "*";
+						asciiGrid[rowCountDown][columnCount] = fillSpaceChar;
 					} else {
-						asciiGrid[rowCountDown][columnCount] = "-";
+						asciiGrid[rowCountDown][columnCount] = emptySpaceChar;
 					}
 				}
 			}
@@ -91,26 +106,31 @@ public class DrawLogo {
 			}
 		}
 		
-		for(String[] rows : asciiGrid) {
-			for(String column : rows) {
+		for(char[] rows : asciiGrid) {
+			for(char column : rows) {
 				System.out.print(column);
 			}
 			
-			for(String column : rows) {
+			for(char column : rows) {
 				System.out.print(column);
 			}
 			
 			System.out.print('\n');
 		}
 	}
-	
+
+
 	public static void main(String[] args) {
 		Scanner inputStream = new Scanner(System.in);
 		
 		int letterThickness = inputStream.nextInt();
 		
-		if(isValidLetterThickness(letterThickness)) {
-			printAsciiLogo(letterThickness);
+		DrawLogo drawLetter = new DrawLogo(2, 10000, letterThickness, '-', '*');
+		
+		if(drawLetter.isValidLetterThickness()) {
+			drawLetter.printAsciiLogo();
+		} else {
+			System.out.println("Invalid input for N! Exiting...");
 		}
 		
 		inputStream.close();
